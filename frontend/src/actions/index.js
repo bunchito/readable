@@ -2,8 +2,8 @@ import axios from 'axios';
 import uuidV1 from 'uuid/v1';
 
 import {
-  SERVER_ALIVE,
   RECEIVE_CATEGORIES,
+  RECEIVE_POST,
   RECEIVE_POSTS_ALL,
   ADD_POST,
   SCORE_UP_POST,
@@ -13,7 +13,9 @@ import {
   RECEIVE_COMMENTS,
   ADD_COMMENT,
   EDIT_COMMENT,
-  DELETE_COMMENT }  from './types';
+  DELETE_COMMENT,
+  SCORE_UP_COMMENT,
+  SCORE_DOWN_COMMENT, }  from './types';
 
   const api = 'http://localhost:3001';
 
@@ -21,15 +23,6 @@ import {
     Accept: 'application/json',
     Authorization: 'alto-guiso'
   };
-
-  export function isServerAlive() {
-    const url = `${api}/`;
-    const request = axios.get(url, { headers });
-    return {
-      type: SERVER_ALIVE,
-      payload: request
-    }
-  }
 
   export function fetchCategories() {
     const url = `${api}/categories`;
@@ -45,6 +38,15 @@ import {
     const request = axios.get(url, { headers });
     return {
       type: RECEIVE_POSTS_ALL,
+      payload: request
+    }
+  }
+
+  export function fetchPost(postId) {
+    const url = `${api}/posts/${postId}`;
+    const request = axios.get(url, { headers });
+    return {
+      type: RECEIVE_POST,
       payload: request
     }
   }
@@ -78,7 +80,7 @@ import {
     }
   }
 
-  export function scoreUporDown(postId, upOrDown) {
+  export function scoreUporDownPost(postId, upOrDown) {
     const url = `${api}/posts/${postId}`;
     const request = axios.post(url, { "option" : upOrDown  }, { headers });
     if(upOrDown === 'upVote') {
@@ -117,7 +119,6 @@ import {
     }
   }
 
-
   export function editComment(commentId, body) {
     const url = `${api}/comments/${commentId}`;
     const timestamp = Date.now();
@@ -129,12 +130,28 @@ import {
     }
   }
 
-
   export function deleteComment(commentId) {
     const url = `${api}/comments/${commentId}`;
     const request = axios.delete(url, { headers });
     return {
       type: DELETE_COMMENT,
       payload: request
+    }
+  }
+
+  export function scoreUporDownComment(commentId, upOrDown) {
+    const url = `${api}/comments/${commentId}`;
+    const request = axios.post(url, { "option" : upOrDown  }, { headers });
+    if(upOrDown === 'upVote') {
+      return {
+        type: SCORE_UP_COMMENT,
+        payload: request
+      }
+    }
+    else {
+      return {
+        type: SCORE_DOWN_COMMENT,
+        payload: request
+      }
     }
   }

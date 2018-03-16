@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { addComment } from '../actions/index';
 import { editComment } from '../actions/index';
 import { deleteComment } from '../actions/index';
+import { fetchPost } from '../actions/index';
 
 class Comment extends Component {
 
@@ -17,34 +18,38 @@ class Comment extends Component {
   }
 
   componentDidMount() {
-    this.setState({parentPost: this.props.onPassingPost.id});
+    this.setState({ parentPost: this.props.onPassingPost.id });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({parentPost: nextProps.onPassingPost.id});
+    if (nextProps !== this.props.onPassingPost) {
+      this.setState({ parentPost: nextProps.onPassingPost.id });
+    }
   }
 
   addingComment = (commentAuthor, commentBody, postId) => {
     this.props.addComment(commentAuthor, commentBody, postId);
-    this.setState({author: '', body: ''});
+    this.setState({ author: '', body: '' });
+    this.props.fetchPost(postId);
   }
 
-
-  onDeletingComment = (commentId) => {
+  onDeletingComment = (commentId, postId) => {
     this.props.deleteComment(commentId);
+
+    this.props.fetchPost(postId);
   }
 
   onEditingComment = (theComment) => {
-    this.setState({editingCommentOn: true, editingCommentObj: theComment, editingBody: theComment.body});
+    this.setState({ editingCommentOn: true, editingCommentObj: theComment, editingBody: theComment.body });
   }
 
   cancelEditComment = () => {
-    this.setState({editingCommentOn: false});
+    this.setState({ editingCommentOn: false });
   }
 
   saveEditComment = (commentId, commentBody) => {
     this.props.editComment(commentId, commentBody);
-    this.setState({editingCommentOn: false});
+    this.setState({ editingCommentOn: false });
   }
 
   updateFormElStates = (element, value) => {
@@ -53,10 +58,9 @@ class Comment extends Component {
     });
   }
 
-
   render() {
 
-    const { showMorePost, passingCommentsList, onAddingComment, onDeletingComment, comments } = this.props;
+    const { comments, onChangeScore } = this.props;
 
     return (
       <div>
@@ -64,17 +68,22 @@ class Comment extends Component {
         {comments.length > 0 && (
           <div>
             <br />
-            <span>Great! This post has {comments.length} comments!</span>
+            <span>Great! This post has { comments.length } comments!</span>
 
             {comments.map((eachComment) =>
-              <div key={eachComment.id} className="comments">
+              <div key={ eachComment.id } className="comments">
                 <div>
-                  <i>{eachComment.author}</i> said:
+                  <i>{ eachComment.author }</i> said:
                   <br />
-                  {eachComment.body}
+                  { eachComment.body }
                   <br />
-                  <span className="click-element" onClick={() => this.onDeletingComment(eachComment.id)}>Delete <i className="fa fa-trash"></i></span>
-                  <span className="click-element" onClick={() => this.onEditingComment(eachComment) }>Edit <i className="fa fa-edit"></i></span>
+                  <div className="scoring">
+                    Score: { eachComment.voteScore }
+                    <span className="click-element" onClick={ () => onChangeScore(eachComment.id, 'upVote', 'comment') }><i className="fa fa-plus-square"></i></span>
+                    <span className="click-element" onClick={ () => onChangeScore(eachComment.id, 'downVote', 'comment') }><i className="fa fa-minus-square"></i></span>
+                  </div>
+                  <span className="click-element" style={{ marginLeft: 0 }}  onClick={ () => this.onDeletingComment(eachComment.id, eachComment.parentId) }>Delete <i className="fa fa-trash"></i></span>
+                  <span className="click-element" onClick={ () => this.onEditingComment(eachComment) }>Edit <i className="fa fa-edit"></i></span>
                 </div>
               </div>
             )}
@@ -86,7 +95,7 @@ class Comment extends Component {
             <input type="hidden" name="commentId" defaultValue={ this.state.editingCommentOn.commentId } />
             <div>
               <label>Edit Body:</label>
-              <textarea name="body" onChange={ (event) => this.updateFormElStates('editingBody',event.target.value) } value={ this.state.editingBody }>
+              <textarea name="body" onChange={ (event) => this.updateFormElStates('editingBody',event.target.value) } value={ this.state.editingBody } required>
               </textarea>
             </div>
             <button onClick={ () => this.saveEditComment(this.state.editingCommentObj.id, this.state.editingBody) }>Save</button>
@@ -96,11 +105,11 @@ class Comment extends Component {
           <div className="comment-form">
             <div>
               <label>Comment Author:</label>
-              <input type="text" name="author" onChange={ (event) => this.updateFormElStates('author',event.target.value) } value={ this.state.author } />
+              <input type="text" name="author" onChange={ (event) => this.updateFormElStates('author',event.target.value) } value={ this.state.author } required />
             </div>
             <div>
               <label>Comment Body:</label>
-              <textarea name="body" onChange={ (event) => this.updateFormElStates('body',event.target.value) } value={ this.state.body } >
+              <textarea name="body" onChange={ (event) => this.updateFormElStates('body',event.target.value) } value={ this.state.body } required>
               </textarea>
             </div>
             <button onClick={ () => this.addingComment(this.state.author, this.state.body, this.state.parentPost) }>Add</button>
@@ -121,7 +130,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addComment, editComment, deleteComment }, dispatch);
+  return bindActionCreators({ addComment, editComment, deleteComment, fetchPost }, dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Comment);

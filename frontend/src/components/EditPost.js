@@ -5,6 +5,11 @@ import { editPost } from '../actions/index';
 
 class EditPost extends Component {
 
+  constructor() {
+    super();
+    this.onSubmitForm = this.onSubmitForm.bind(this);
+  }
+
   state = {
     title: '',
     body: '',
@@ -19,11 +24,12 @@ class EditPost extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.onEditingPost)
-    this.setState({
-      title: nextProps.onEditingPost.title,
-      body: nextProps.onEditingPost.body
-    });
+    if (nextProps.onEditingPost.title !== this.props.onEditingPost.title && nextProps.onEditingPost.body !== this.props.onEditingPost.body) {
+      this.setState({
+        title: nextProps.onEditingPost.title,
+        body: nextProps.onEditingPost.body
+      });
+    }
   }
 
   updateFormElStates = (element, value) => {
@@ -34,7 +40,7 @@ class EditPost extends Component {
 
   onSubmitForm(event) {
     event.preventDefault();
-    this.setState({status: 'edited'});
+    this.setState({ status: 'edited' });
     this.props.editPost(this.state.title, this.state.body, this.props.onEditingPost.id);
   }
 
@@ -47,12 +53,12 @@ class EditPost extends Component {
 
       <div>
 
-        {status === '' ? (
+        { status === '' ? (
           <div>
             <div>
-              <h2>You are editing: <i>{onEditingPost.title}</i></h2>
+              <h2>You are editing: <i>{ onEditingPost.title }</i></h2>
             </div>
-            <form onSubmit={ this.onSubmitForm.bind(this) }>
+            <form onSubmit={ this.onSubmitForm } className="particular-post">
               <input type="hidden" defaultValue="{onEditingPost.id}" />
               <div>
                 <label>Post title:</label>
@@ -67,13 +73,12 @@ class EditPost extends Component {
                 <button>Save</button>
               </div>
             </form>
-
           </div>
         ) : (
           <div>
             <div className="view-response">Thanks for editing the post!</div>
             <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
-            {onReRenderingView()}
+            { onReRenderingView() }
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import { RECEIVE_POSTS_ALL, ADD_POST, EDIT_POST, DELETE_POST, SCORE_UP_POST, SCORE_DOWN_POST } from '../actions/types';
+import { RECEIVE_POSTS_ALL, RECEIVE_POST, ADD_POST, EDIT_POST, DELETE_POST, SCORE_UP_POST, SCORE_DOWN_POST } from '../actions/types';
 
 
 export default function(state = [], action) {
@@ -7,6 +7,17 @@ export default function(state = [], action) {
     switch (action.type) {
       case RECEIVE_POSTS_ALL:
       return action.payload.data;
+
+      case RECEIVE_POST:
+      return state.map(element => {
+        if (element.id === action.payload.data.id) {
+          return {
+            ...element,
+            commentCount: action.payload.data.commentCount
+          }
+        }
+        return element
+      });
 
       case ADD_POST:
       return [...state, action.payload.data];
@@ -25,7 +36,6 @@ export default function(state = [], action) {
       });
 
       case DELETE_POST:
-      console.log('delete post')
       return state.map(element => {
         if (element.id === action.payload.data.id) {
           return {
@@ -34,8 +44,7 @@ export default function(state = [], action) {
           }
         }
         return element;
-        //  }).filter(element => element.deleted !== true);
-      });
+      }).filter(element => element.deleted !== true);
 
       case SCORE_UP_POST:
       return state.map(element => {

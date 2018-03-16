@@ -6,6 +6,8 @@ let db = {}
 
 const defaultData = require('./all-posts')
 
+
+
 console.log(defaultData)
 
 function getData (token) {

@@ -1,25 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-class CategoryList extends Component {
+const CategoryList = ({ categories }) => {
 
-  renderCatList() {
-    return this.props.categories.map((category) => {
+  function renderCatList() {
+    return categories.map((category) => {
+
+      const { name, path } = category;
+
       return (
-        <div key={ category.name }><a href={ category.path }>{ category.name }</a></div>
+        <div key={ name }><Link to={ `/${path}` }>{ name }</Link></div>
       );
     });
   }
 
-  render() {
-
     return (
       <div>
         <div className="full-row-header">
-          <i style={{color: '#fff'}}>Current categories:</i> { this.renderCatList() }
+          <i style={{ color: '#fff' }}>Current categories:</i> { renderCatList() }
         </div>
       </div>
     );
   }
-}
 
 export default CategoryList;

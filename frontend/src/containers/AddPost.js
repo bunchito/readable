@@ -5,19 +5,23 @@ import { addPost } from '../actions/index';
 
 class AddPost extends Component {
 
+  constructor() {
+    super();
+    this.onSubmitForm = this.onSubmitForm.bind(this);
+  }
+
   state = {
     author: '',
     title: '',
     category: 'react',
     body: '',
-    defaultSelect: 'none',
     status: ''
   }
 
   renderCatList() {
     return this.props.categories.map((category) => {
       return (
-        <option key={category.name} value={category.name}>{category.name}</option>
+        <option key={ category.name } value={ category.name }>{ category.name }</option>
       );
     });
   }
@@ -30,21 +34,21 @@ class AddPost extends Component {
 
   onSubmitForm(event) {
     event.preventDefault();
-    this.setState({status: 'created'});
+    this.setState({ status: 'created' });
     this.props.addPost(this.state.author, this.state.title, this.state.category, this.state.body);
   }
 
   render() {
 
-    const { categories, onReRenderingView } = this.props;
-    const { defaultSelect, status } = this.state;
+    const { onReRenderingView } = this.props;
+    const { status } = this.state;
 
     return (
 
       <div>
 
         {status === '' ? (
-          <form onSubmit={ this.onSubmitForm.bind(this) }>
+          <form onSubmit={ this.onSubmitForm }>
             <h2>Add a Post</h2>
             <div>
               <label>Post title:</label>
@@ -68,7 +72,6 @@ class AddPost extends Component {
                 </select>
               </div>
             </div>
-
             <div className="center-helper">
               <button>Add</button>
             </div>
@@ -76,8 +79,8 @@ class AddPost extends Component {
         ) : (
           <div>
             <div className="view-response">Thanks for adding a post!</div>
-            <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
-            {this.props.onReRenderingView()}
+            <div style={{ textAlign: 'center' }}>This view will be refreshed in 3s...!</div>
+            { onReRenderingView() }
           </div>
         )}
 
@@ -86,13 +89,11 @@ class AddPost extends Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     categories: state.categories
   }
 }
-
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ addPost }, dispatch);
