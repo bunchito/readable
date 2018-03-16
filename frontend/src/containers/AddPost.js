@@ -40,7 +40,7 @@ class AddPost extends Component {
 
   render() {
 
-    const { onReRenderingView } = this.props;
+    const { onUpdateRightSidebar } = this.props;
     const { status } = this.state;
 
     return (
@@ -80,7 +80,7 @@ class AddPost extends Component {
           <div>
             <div className="view-response">Thanks for adding a post!</div>
             <div style={{ textAlign: 'center' }}>This view will be refreshed in 3s...!</div>
-            { onReRenderingView() }
+            { onUpdateRightSidebar() }
           </div>
         )}
 

@@ -46,7 +46,7 @@ class EditPost extends Component {
 
   render() {
 
-    const { onEditingPost, onReRenderingView } = this.props;
+    const { onEditingPost, onUpdateRightSidebar } = this.props;
     const { status } = this.state;
 
     return (
@@ -78,7 +78,7 @@ class EditPost extends Component {
           <div>
             <div className="view-response">Thanks for editing the post!</div>
             <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
-            { onReRenderingView() }
+            { onUpdateRightSidebar() }
           </div>
         )}
 

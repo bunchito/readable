@@ -20,7 +20,7 @@ class ReadableApp extends Component {
 
   state = {
     currentPost: null,
-    rightView: '',
+    rightSideBar: '',
     postToEdit: null,
     showMorePost: null,
     server: false,
@@ -44,7 +44,7 @@ class ReadableApp extends Component {
       }
     }
     this.showMore = (thePost, updateView) => {
-      this.setState({showMorePost: thePost, rightView: updateView});
+      this.setState({showMorePost: thePost, rightSideBar: updateView});
       this.props.fetchComments(thePost.id);
     }
   }
@@ -57,7 +57,7 @@ class ReadableApp extends Component {
   changeScore = (theElement, upOrDown, postOrComment) => {
     if (postOrComment === 'post') {
       this.props.scoreUporDownPost(theElement, upOrDown);
-      if (this.state.rightView === 'showMore') {
+      if (this.state.rightSideBar === 'showMore') {
         let localScore = this.state.showMorePost.voteScore;
         if (upOrDown === 'upVote') {
           localScore = localScore + 1;
@@ -73,18 +73,18 @@ class ReadableApp extends Component {
   }
 
   deletePost = (thePostId) => {
-    this.setState({rightView: 'delete'});
+    this.setState({rightSideBar: 'delete'});
     this.props.comments.map((eachObj) => deleteComment(eachObj.id))
     this.props.deletePost(thePostId);
   }
 
   editPost = (thePost, updateView) => {
-    this.setState({postToEdit: thePost, rightView: updateView});
+    this.setState({postToEdit: thePost, rightSideBar: updateView});
   }
 
-  reRenderRightView = () => {
+  updateRightSidebar = () => {
     setTimeout(() => {
-      this.setState({rightView: ''});
+      this.setState({rightSideBar: ''});
     }, 3000);
   }
 
@@ -97,7 +97,7 @@ class ReadableApp extends Component {
   render() {
 
     const { posts, categories } = this.props;
-    const { rightView, postToEdit, showMorePost } = this.state;
+    const { rightSideBar, postToEdit, showMorePost } = this.state;
 
 
     return (
@@ -196,17 +196,17 @@ class ReadableApp extends Component {
           </div>
 
           <div className="columns columns-3-3">
-            {rightView === 'add' ?
-              <AddPost onReRenderingView={ this.reRenderRightView } />
-            : ( rightView === 'editPost' ?
-              <EditPost onEditingPost={ postToEdit } onReRenderingView={ this.reRenderRightView } />
-            : ( rightView === 'delete' ?
+            {rightSideBar === 'add' ?
+              <AddPost onUpdateRightSidebar={ this.updateRightSidebar } />
+            : ( rightSideBar === 'editPost' ?
+              <EditPost onEditingPost={ postToEdit } onUpdateRightSidebar={ this.updateRightSidebar } />
+            : ( rightSideBar === 'delete' ?
               <div>
                 <div className="view-response">Thanks for deleting a post!</div>
                 <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
-                { this.reRenderRightView() }
+                { this.updateRightSidebar() }
               </div>
-            : ( rightView === 'showMore' ?
+            : ( rightSideBar === 'showMore' ?
               <div className="post-comments">
                 <Post onPassingPost={ showMorePost } onChangeScore={ this.changeScore } onDeletePost={ this.deletePost } onEditPost={ this.editPost }  />
                 <Comment onPassingPost={showMorePost} onChangeScore={this.changeScore} />
