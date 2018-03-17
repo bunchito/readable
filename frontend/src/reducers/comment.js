@@ -29,15 +29,7 @@ import {
         });
 
         case DELETE_COMMENT:
-        return state.map(element => {
-          if (element.id === action.payload.data.id) {
-            return {
-              ...element,
-              deleted: action.payload.data.deleted
-            }
-          }
-          return element
-        }).filter(element => element.deleted !== true);
+        return state.filter(element => element.id !== action.payload.data.id)
 
         case SCORE_UP_COMMENT:
         return state.map(element => {

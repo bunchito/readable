@@ -68,7 +68,7 @@ class Comment extends Component {
         {comments.length > 0 && (
           <div>
             <br />
-            <span>Great! This post has { comments.length } comments!</span>
+            <span>Great! This post has { comments.length } { comments.length > 1 ? 'comments' : 'comment' }!</span>
 
             {comments.map((eachComment) =>
               <div key={ eachComment.id } className="comments">

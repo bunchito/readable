@@ -39,7 +39,7 @@ class PostDetail extends Component {
   }
 
   deletePost = (thePostId) => {
-    this.props.comments.map((eachObj) => deleteComment(eachObj.id))
+    this.props.comments.map((eachObj) => this.props.deleteComment(eachObj.id))
     this.props.deletePost(thePostId);
   }
 
@@ -70,7 +70,6 @@ class PostDetail extends Component {
 
   deletingComment = (commentId, postId) => {
     this.props.deleteComment(commentId);
-
     this.props.fetchPost(postId);
   }
 
@@ -130,7 +129,10 @@ class PostDetail extends Component {
           </div>
         ) : (
           <div>
-            <h1>Nothing here!</h1>
+            <h1 style={{ marginBottom: 0, paddingBottom: 0 }}>Nothing here!</h1>
+            <div style={{ textAlign: 'center' }} >
+              <Link className="body-links-home"  to="/">Go Home!</Link>
+            </div>
           </div>
         )}
 
@@ -156,7 +158,7 @@ class PostDetail extends Component {
         {comments.length > 0 && (
           <div className="particular-post">
             <br />
-            <span>Great! This post has { comments.length } comments!</span>
+            <span>Great! This post has { comments.length } { comments.length > 1 ? 'comments' : 'comment' }!</span>
             {comments.map((eachComment) =>
               <div key={ eachComment.id } className="comments">
                 <div>

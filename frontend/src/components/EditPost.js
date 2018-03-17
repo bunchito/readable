@@ -77,7 +77,7 @@ class EditPost extends Component {
         ) : (
           <div>
             <div className="view-response">Thanks for editing the post!</div>
-            <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
+            <div style={{textAlign: 'center'}}>Im going to be refreshed in 2s...!</div>
             { onUpdateRightSidebar() }
           </div>
         )}

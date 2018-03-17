@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { Route, Link, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
 import Loading from 'react-loading';
 import CategoryList from '../components/CategoryList';
 import Post from '../components/Post';
@@ -13,8 +12,6 @@ import PostDetail from '../containers/PostDetail';
 import AddPost from '../containers/AddPost';
 import Comment from '../containers/Comment';
 import { fetchCategories, fetchPostsAll, scoreUporDownPost, fetchComments, deletePost, deleteComment, scoreUporDownComment } from '../actions/index';
-import panick from '../img/cuco.jpg';
-
 
 class ReadableApp extends Component {
 
@@ -24,7 +21,6 @@ class ReadableApp extends Component {
     postToEdit: null,
     showMorePost: null,
     server: false,
-    helperServer: 0,
     loading: true
   }
 
@@ -33,7 +29,7 @@ class ReadableApp extends Component {
     this.props.fetchCategories();
     this.props.fetchPostsAll();
     setTimeout(() => this.setState({ loading: false }), 2000);
-    // To force the loading effect =)
+    // To force the loading effect since the app is very light =)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +47,7 @@ class ReadableApp extends Component {
 
 
   showView = (view) => {
-    this.setState({rightView: view});
+    this.setState({rightSideBar: view});
   }
 
   changeScore = (theElement, upOrDown, postOrComment) => {
@@ -85,14 +81,8 @@ class ReadableApp extends Component {
   updateRightSidebar = () => {
     setTimeout(() => {
       this.setState({rightSideBar: ''});
-    }, 3000);
+    }, 2000);
   }
-
-  tryConnServer = () => {
-    this.props.isServerAlive();
-    this.setState({helperServer: 1});
-  }
-
 
   render() {
 
@@ -107,21 +97,6 @@ class ReadableApp extends Component {
         {this.state.loading === true && (
           <Loading type='bars' color='green' height='667' width='375' />
         )}
-
-        <Modal
-          className="modal"
-          isOpen={ this.state.server }
-          onRequestClose={ this.closeModal }
-          ariaHideApp={ false } contentLabel="Server is Down">
-          <div className="center-helper">
-            <div>
-              <div style={{ fontSize: 40, margin: 40 }}>Bart, I dont want to alarm you, but there may be a boogeyman or boogeymen in the house!</div>
-            </div>
-            <img src={ panick } alt="Server is Down" />
-            <div style={{ fontSize: 40, margin: 40 }}>... and the server is down!!!</div>
-            <button onClick={ () => this.tryConnServer() }>Try AGAIN</button>
-          </div>
-        </Modal>
 
         <CategoryList categories={ categories } />
 
@@ -139,7 +114,7 @@ class ReadableApp extends Component {
               <div>
                 <ul className="element-ul">
                   <li>Use the select on the main view to sort the posts</li>
-                  <li>For more information about a post, click on See more...</li>
+                  <li>For more information about a post, click on See more... You can click on the post title as well.</li>
                   <li>You can increase or decrease the score from the main view or from the right sidebar view (through See more...)</li>
                   <li>You can Delete and/or Edit a post in the same way: main view or right sidebar view</li>
                   <li>If you want to add a post click on the following button...</li>
@@ -154,7 +129,6 @@ class ReadableApp extends Component {
                 </ul>
               </div>
               <div>Among other things... Thanks for your time</div>
-              <div>Try with the server down ;)</div>
             </div>
           </div>
 
@@ -188,7 +162,10 @@ class ReadableApp extends Component {
 
               <Route render= {() => (
                 <div>
-                  <h1>Nothing here!</h1>
+                  <h1 style={{ marginBottom: 0, paddingBottom: 0 }}>Nothing here!</h1>
+                  <div style={{ textAlign: 'center' }} >
+                    <Link className="body-links-home"  to="/">Go Home!</Link>
+                  </div>
                 </div>
               )}/>
 
@@ -203,7 +180,7 @@ class ReadableApp extends Component {
             : ( rightSideBar === 'delete' ?
               <div>
                 <div className="view-response">Thanks for deleting a post!</div>
-                <div style={{textAlign: 'center'}}>This view will be refreshed in 3s...!</div>
+                <div style={{textAlign: 'center'}}>Im going to be refreshed in 2s...!</div>
                 { this.updateRightSidebar() }
               </div>
             : ( rightSideBar === 'showMore' ?
